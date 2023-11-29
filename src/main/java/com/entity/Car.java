@@ -1,5 +1,7 @@
 package com.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -30,6 +32,7 @@ public class Car {
 
 	@ManyToOne
 	@JoinColumn(name = "vatNumber")
+	@JsonIgnore
 	private Dealership dealership;
 
 	// Insert

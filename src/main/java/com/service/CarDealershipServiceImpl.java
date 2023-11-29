@@ -54,8 +54,29 @@ public class CarDealershipServiceImpl implements CarDealershipService {
 
 	@Override
 	public Map<Dealership, List<Car>> updateCarsOfDealership(String vatNumber, List<Car> cars) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<Dealership, List<Car>> result = new HashMap<>();
+		Dealership dealershipTemp = null;
+
+		if (!dealRep.existsById(vatNumber) || vatNumber == null) {
+			System.out.println("Non esiste");
+			return null;
+		}
+
+		dealershipTemp = dealRep.findById(vatNumber).get();
+
+		Dealership dealership = dealershipTemp;
+
+		dealRep.save(dealership);
+
+		cars.forEach(c -> {
+			c.setDealership(dealership);
+		});
+
+		carRep.saveAll(cars);
+
+		result.put(dealership, cars);
+
+		return result;
 	}
 
 	@Override
