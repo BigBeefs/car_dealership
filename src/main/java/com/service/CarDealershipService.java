@@ -12,12 +12,8 @@ public interface CarDealershipService {
 	 * Inserisce un nuovo dealersship e le sue macchine
 	 * 
 	 * @param dealership
-	 * @param cars
 	 * @return Map<Dealership, List<Car>>
 	 */
-	Map<Dealership, List<Car>> insertCarsDealership(Map<Dealership, List<Car>> carsDealership);
-
-	// Test
 	Map<Dealership, List<Car>> insertCarsDealership2(Dealership dealership);
 
 	/**
