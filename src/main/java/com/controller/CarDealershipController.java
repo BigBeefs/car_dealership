@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -48,12 +49,30 @@ public class CarDealershipController {
 	}
 
 	/*
-	 * Input da dare nel body: vatNumber : ""
+	 * Input da dare nel body: "vatNumber": "AA123456789"
 	 * 
 	 * http://127.0.0.1:8080/api/deleteDealershipWithCars
 	 */
 	@DeleteMapping("/deleteDealershipWithCars")
 	public Map<Boolean, String> deleteDealershipWithCars(@RequestBody Dealership dealership) {
 		return cdService.deleteDealershipWithCars(dealership);
+	}
+
+	/*
+	 * http://127.0.0.1:8080/api/findAllCarDealrships
+	 */
+	@GetMapping("/findAllCarDealrships")
+	public List<Dealership> findAllCarDealrships() {
+		return cdService.findAllCarDealrships();
+	}
+
+	/*
+	 * Input da dare nel body:{ "vatNumber": "AA123456789" }
+	 * 
+	 * http://127.0.0.1:8080/api/findAllCarDealerships
+	 */
+	@GetMapping("/findDealershipByVatNumber")
+	public Dealership findDealershipByVatNumber(@RequestBody Dealership dealership) {
+		return cdService.findDealershipByVatNumber(dealership);
 	}
 }

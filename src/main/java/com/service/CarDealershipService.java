@@ -46,5 +46,5 @@ public interface CarDealershipService {
 	 * @param dealership
 	 * @return
 	 */
-	Map<Dealership, List<Car>> findCarDealrshipByVatNumber(Dealership dealership);
+	Dealership findDealershipByVatNumber(Dealership dealership);
 }
