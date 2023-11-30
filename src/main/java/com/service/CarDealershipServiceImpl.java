@@ -80,15 +80,38 @@ public class CarDealershipServiceImpl implements CarDealershipService {
 	}
 
 	@Override
-	public Map<Boolean, String> deleteDealership(Dealership dealership) {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<Boolean, String> deleteDealershipWithCars(Dealership dealership) {
+		Map<Boolean, String> result = new HashMap<>();
+		String vatNumber = dealership.getVatNumber();
+		Boolean exist = dealRep.existsById(vatNumber);
+
+		if (!exist) {
+			result.put(exist, "Non trovato! Fareshi");
+			return result;
+		}
+
+		// dealership = dealRep.findById(vatNumber).get();
+
+		dealRep.deleteById(vatNumber);
+
+		result.put(true, "Eliminato!");
+
+		return result;
 	}
 
 	@Override
-	public Map<Dealership, List<Car>> findAllCarDealrships() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Dealership> findAllCarDealrships() {
+
+		List<Dealership> dealerships = dealRep.findAll();
+		System.err.println("Qua: Limoni ");
+
+		// Per ogni dealership settiamo la sua lista di cars tramite il metodo findAllByVatNumber
+		// che restituisce la lista di cars
+		dealerships.forEach(d -> d.setCars(carRep.findAllByVatNumber(d.getVatNumber())));
+
+//		dealerships.forEach(d -> System.out.println(d.getCars()));
+
+		return dealerships;
 	}
 
 	@Override

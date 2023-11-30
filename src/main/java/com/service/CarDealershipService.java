@@ -31,14 +31,14 @@ public interface CarDealershipService {
 	 * @param dealership
 	 * @return
 	 */
-	Map<Boolean, String> deleteDealership(Dealership dealership);
+	Map<Boolean, String> deleteDealershipWithCars(Dealership dealership);
 
 	/**
 	 * Seleziona tutti i dearlships presenti nel DB
 	 * 
 	 * @return
 	 */
-	Map<Dealership, List<Car>> findAllCarDealrships();
+	List<Dealership> findAllCarDealrships();
 
 	/**
 	 * Seleziona il dealership e la sua lista di cars, in base all'input dato

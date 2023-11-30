@@ -3,6 +3,7 @@ package com.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -32,7 +33,7 @@ public class Dealership {
 
 	private String city;
 
-	@OneToMany(mappedBy = "dealership")// , cascade = CascadeType.PERSIST)// , fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "dealership", cascade = CascadeType.REMOVE)// fetch = FetchType.EAGER)
 	List<Car> cars = new ArrayList<>();
 
 	// Insert | Update
