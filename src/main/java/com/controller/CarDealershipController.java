@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -82,6 +83,7 @@ public class CarDealershipController {
 
 	// http://127.0.0.1:8080/api/example
 
+	// metodo di test
 	@GetMapping("/example")
 	public String exampleEndpoint(@RequestHeader HttpHeaders headers) {
 		// Utilizza il valore dell'header come necessario
@@ -95,27 +97,6 @@ public class CarDealershipController {
 		System.out.println(acceptHeader);
 		System.out.println(acceptHeader1);
 
-//		if (acceptHeader != null && acceptHeader.contains("application/xml")) {
-//			// Il client accetta XML, restituisci la risposta in formato XML
-//			// Implementa la logica per generare la risposta XML
-//			return ResponseEntity.ok().body("<data><message>Hello, XML!</message></data>");
-//		} else {
-//			// Se il tipo di risposta non è specificato o è JSON, restituisci la risposta in
-//			// formato JSON
-//			// Implementa la logica per generare la risposta JSON
-//			return ResponseEntity.ok().body("{\"message\": \"Hello, JSON!\"}");
-//		}
-
-		// Vogliamo aggiungere un header
-//		HttpHeaders headersResponse = new HttpHeaders();
-//		headers.add("Custom-Header", "headerValue");
-//
-//		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/example")
-//				.buildAndExpand(savedOrUpdated.getVatNumber()).toUri();
-
-//		return "Il valore dell'header è: " + headersResponse;
-//		return ResponseEntity.created(location).headers(headers).build();
-
 		HttpHeaders headersResponse = new HttpHeaders();
 		headersResponse.add("Tua madre", "Cuoca");
 
@@ -126,5 +107,56 @@ public class CarDealershipController {
 
 		return " " + ResponseEntity.ok().headers(headersResponse).body("Il valore dell'header è: " + acceptHeader);
 	}
+
+	/*
+	 * http://127.0.0.1:8080/api/findAllCarDealrshipsCustom
+	 */
+	@GetMapping("/findAllCarDealrshipsCustom")
+	public List<Dealership> findAllCarDealrshipsCustom(@RequestHeader HttpHeaders headers) {
+		String acceptHeader = headers.getFirst("Accept");
+
+		System.out.println(exampleEndpoint(headers));
+		HttpHeaders headersResponse = new HttpHeaders();
+		headersResponse.add("Content-Type", "application/json");
+
+		ResponseEntity.ok().headers(headersResponse);
+
+		return cdService.findAllCarDealrships();
+
+	}
+
+	@GetMapping(path = "/findAllCarDealrshipsCustom1") // produces = MediaType.APPLICATION_JSON_VALUE
+	public ResponseEntity<List<Dealership>> findAllCarDealrshipsCustom1(@RequestHeader HttpHeaders headers) {
+
+		String acceptHeader = headers.getFirst("Accept");
+
+		List<Dealership> dealerships = cdService.findAllCarDealrships();
+
+		Boolean checkJSON = acceptHeader.contains("application/json");
+		Boolean checkXML = acceptHeader.contains("application/xml");
+
+		System.out.println(checkXML);
+		System.out.println(acceptHeader);
+
+		if (checkXML) {
+
+			return ResponseEntity.ok().contentType(MediaType.APPLICATION_XML).body(dealerships);
+
+		}
+
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(dealerships);
+
+	}
+
+//	@PostMapping(value = "/yourEndpoint", consumes = { MediaType.APPLICATION_XML_VALUE,
+//			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
+//					MediaType.APPLICATION_JSON_VALUE })
+//	public ResponseEntity<List<Dealership>> yourEndpoint() {
+//		// Logica del controller
+//
+//		// Ritorna qualcosa che verrà serializzato in XML o JSON in base all'header
+//		// Accept
+//		return ResponseEntity.ok().body(cdService.findAllCarDealrships());
+//	}
 
 }
