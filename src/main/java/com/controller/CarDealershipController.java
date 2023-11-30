@@ -41,6 +41,7 @@ public class CarDealershipController {
 	 */
 	@PostMapping("/createCarsDealership")
 	public Map<Dealership, List<Car>> saveCarsDealership2(@Valid @RequestBody Dealership dealership) {
+
 		return cdService.insertCarsDealership2(dealership);
 	}
 
@@ -86,6 +87,7 @@ public class CarDealershipController {
 
 	// http://127.0.0.1:8080/api/example
 
+	// metodo di test
 	@GetMapping("/example")
 	public String exampleEndpoint(@RequestHeader HttpHeaders headers) {
 
@@ -99,21 +101,64 @@ public class CarDealershipController {
 
 		HttpHeaders headersResponse = new HttpHeaders();
 		headersResponse.add("Tua madre", "Cuoca");
-		Timestamp timestamp1 = new Timestamp(System.currentTimeMillis());
 
-		return timestamp1 + " /n"
-				+ ResponseEntity.ok().headers(headersResponse).body("Il valore dell'header è: " + acceptHeader);
+		// Puoi anche aggiungere altri header, se necessario
+		// headersResponse.add("Another-Header", "anotherHeaderValue");
+
+		// Restituisci la risposta con l'header personalizzato
+
+		return " " + ResponseEntity.ok().headers(headersResponse).body("Il valore dell'header è: " + acceptHeader);
 	}
 
-	@PostMapping(value = "/yourEndpoint", consumes = { MediaType.APPLICATION_XML_VALUE,
-			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
-					MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<List<Dealership>> yourEndpoint() {
-		// Logica del controller
+	/*
+	 * http://127.0.0.1:8080/api/findAllCarDealrshipsCustom
+	 */
+	@GetMapping("/findAllCarDealrshipsCustom")
+	public List<Dealership> findAllCarDealrshipsCustom(@RequestHeader HttpHeaders headers) {
+		String acceptHeader = headers.getFirst("Accept");
 
-		// Ritorna qualcosa che verrà serializzato in XML o JSON in base all'header
-		// Accept
-		return ResponseEntity.ok().body(cdService.findAllCarDealrships());
+		System.out.println(exampleEndpoint(headers));
+		HttpHeaders headersResponse = new HttpHeaders();
+		headersResponse.add("Content-Type", "application/json");
+
+		ResponseEntity.ok().headers(headersResponse);
+
+		return cdService.findAllCarDealrships();
+
 	}
+
+	@GetMapping(path = "/findAllCarDealrshipsCustom1") // produces = MediaType.APPLICATION_JSON_VALUE
+	public ResponseEntity<List<Dealership>> findAllCarDealrshipsCustom1(@RequestHeader HttpHeaders headers) {
+
+		String acceptHeader = headers.getFirst("Accept");
+
+		List<Dealership> dealerships = cdService.findAllCarDealrships();
+
+		Boolean checkJSON = acceptHeader.contains("application/json");
+		Boolean checkXML = acceptHeader.contains("application/xml");
+
+		System.out.println(checkXML);
+		System.out.println(acceptHeader);
+
+		if (checkXML) {
+
+			return ResponseEntity.ok().contentType(MediaType.APPLICATION_XML).body(dealerships);
+
+		}
+
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(dealerships);
+
+	}
+
+//	@PostMapping(value = "/yourEndpoint", consumes = { MediaType.APPLICATION_XML_VALUE,
+//			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
+//					MediaType.APPLICATION_JSON_VALUE })
+//	public ResponseEntity<List<Dealership>> yourEndpoint() {
+//		// Logica del controller
+//
+//		// Ritorna qualcosa che verrà serializzato in XML o JSON in base all'header
+//		// Accept
+//		return ResponseEntity.ok().body(cdService.findAllCarDealrships());
+//	}
 
 }
