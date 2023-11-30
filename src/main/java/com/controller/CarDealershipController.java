@@ -21,6 +21,8 @@ import com.entity.Car;
 import com.entity.Dealership;
 import com.service.CarDealershipService;
 
+import jakarta.validation.Valid;
+
 @RestController
 
 @RequestMapping("/api")
@@ -37,7 +39,8 @@ public class CarDealershipController {
 	 * http://127.0.0.1:8080/api/createCarsDealership
 	 */
 	@PostMapping("/createCarsDealership")
-	public Map<Dealership, List<Car>> saveCarsDealership2(@RequestBody Dealership dealership) {
+	public Map<Dealership, List<Car>> saveCarsDealership2(@Valid @RequestBody Dealership dealership) {
+
 		return cdService.insertCarsDealership2(dealership);
 	}
 

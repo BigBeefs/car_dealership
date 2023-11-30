@@ -7,6 +7,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.customException.DealershipAlreadyExistsException;
+import com.customException.DealershipTeapot;
 import com.entity.Car;
 import com.entity.Dealership;
 import com.repository.CarRepository;
@@ -32,8 +34,9 @@ public class CarDealershipServiceImpl implements CarDealershipService {
 
 		// Controlliamo che non esista gia' il concessionario nel DB
 		if (dealRep.existsById(vatNumber)) {
-			System.out.println("Esiste gia!");
-			return null;
+
+			throw new DealershipAlreadyExistsException("Dealership already exists");
+
 		}
 
 		dealership.setCars(null);
@@ -57,9 +60,8 @@ public class CarDealershipServiceImpl implements CarDealershipService {
 		Map<Dealership, List<Car>> result = new HashMap<>();
 		Dealership dealershipTemp = null;
 
-		if (!dealRep.existsById(vatNumber) || vatNumber == null) {
-			System.out.println("Non esiste");
-			return null;
+		if (!dealRep.existsById(vatNumber)) {
+			throw new DealershipTeapot("Dealership Not Fund");
 		}
 
 		dealershipTemp = dealRep.findById(vatNumber).get();
@@ -104,7 +106,8 @@ public class CarDealershipServiceImpl implements CarDealershipService {
 
 		List<Dealership> dealerships = dealRep.findAll();
 
-		// Per ogni dealership settiamo la sua lista di cars tramite il metodo findAllByVatNumber
+		// Per ogni dealership settiamo la sua lista di cars tramite il metodo
+		// findAllByVatNumber
 		// che restituisce la lista di cars
 		dealerships.forEach(d -> d.setCars(carRep.findAllByDealership(d)));
 
