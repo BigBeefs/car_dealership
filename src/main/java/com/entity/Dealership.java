@@ -33,7 +33,7 @@ public class Dealership {
 
 	private String city;
 
-	@OneToMany(mappedBy = "dealership", cascade = CascadeType.REMOVE)// fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "dealership", cascade = CascadeType.REMOVE) // fetch = FetchType.EAGER)
 	List<Car> cars = new ArrayList<>();
 
 	// Insert | Update

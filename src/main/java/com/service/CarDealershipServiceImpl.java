@@ -103,21 +103,21 @@ public class CarDealershipServiceImpl implements CarDealershipService {
 	public List<Dealership> findAllCarDealrships() {
 
 		List<Dealership> dealerships = dealRep.findAll();
-		System.err.println("Qua: Limoni ");
 
 		// Per ogni dealership settiamo la sua lista di cars tramite il metodo findAllByVatNumber
 		// che restituisce la lista di cars
 		dealerships.forEach(d -> d.setCars(carRep.findAllByDealership(d)));
 
-//		dealerships.forEach(d -> System.out.println(d.getCars()));
-
 		return dealerships;
 	}
 
 	@Override
-	public Map<Dealership, List<Car>> findCarDealrshipByVatNumber(Dealership dealership) {
-		// TODO Auto-generated method stub
-		return null;
+	public Dealership findDealershipByVatNumber(Dealership dealership) {
+		dealership = dealRep.findById(dealership.getVatNumber()).get();
+
+		dealership.setCars(carRep.findAllByDealership(dealership));
+
+		return dealership;
 	}
 
 }
