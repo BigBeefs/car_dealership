@@ -107,7 +107,7 @@ public class CarDealershipServiceImpl implements CarDealershipService {
 
 		// Per ogni dealership settiamo la sua lista di cars tramite il metodo findAllByVatNumber
 		// che restituisce la lista di cars
-		dealerships.forEach(d -> d.setCars(carRep.findAllByVatNumber(d.getVatNumber())));
+		dealerships.forEach(d -> d.setCars(carRep.findAllByDealership(d)));
 
 //		dealerships.forEach(d -> System.out.println(d.getCars()));
 
