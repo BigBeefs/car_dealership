@@ -17,6 +17,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.customException.DealershipAlreadyExistsException;
 import com.customException.DealershipTeapot;
 
+import jakarta.validation.ConstraintViolationException;
+
 /*
  * Per customizzare la response in base al tipo di eccezione sollevata.
  * 
@@ -128,5 +130,16 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(apiError, apiError.getHttpStatus());
 
 	}
+	
+	
+		// Gestiamo l'eccezione nel caso in cui la regex non corrisponde
+	
+	  @ExceptionHandler(ConstraintViolationException.class)
+	  protected ResponseEntity<Object> handleDataIntegrityViolation(ConstraintViolationException ex, WebRequest request) {
+	        String errorMessage = "Errore di violazione del vincolo: " + ex.getMessage();
+	        return handleExceptionInternal(ex, errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	    }
+	  
+	  
 
 }

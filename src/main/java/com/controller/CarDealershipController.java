@@ -1,5 +1,6 @@
 package com.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.entity.Car;
 import com.entity.Dealership;
@@ -150,6 +152,18 @@ public class CarDealershipController {
 		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(dealerships);
 
 	}
+	
+    @PostMapping("/createDealershipHeader")
+    public ResponseEntity<Dealership> saveDealershipTuMadr(@RequestBody Dealership dealership) {
+
+        ResponseEntity<Dealership> re = cdService.saveDealershipTuMadr(dealership);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{vatNumber}")
+                .buildAndExpand(re.getBody().getVatNumber()).toUri();
+
+        return re;
+
+    }
 
 //	@PostMapping(value = "/yourEndpoint", consumes = { MediaType.APPLICATION_XML_VALUE,
 //			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
