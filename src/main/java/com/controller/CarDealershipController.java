@@ -61,7 +61,7 @@ public class CarDealershipController {
 	 * http://127.0.0.1:8080/api/deleteDealershipWithCars
 	 */
 	@DeleteMapping("/deleteDealershipWithCars")
-	public Map<Boolean, String> deleteDealershipWithCars(@RequestBody Dealership dealership) {
+	public Map<Boolean, String> deleteDealershipWithCars(@Valid @RequestBody Dealership dealership) {
 		return cdService.deleteDealershipWithCars(dealership);
 	}
 
@@ -79,7 +79,7 @@ public class CarDealershipController {
 	 * http://127.0.0.1:8080/api/findAllCarDealerships
 	 */
 	@GetMapping("/findDealershipByVatNumber")
-	public Dealership findDealershipByVatNumber(@RequestBody Dealership dealership) {
+	public Dealership findDealershipByVatNumber(@Valid @RequestBody Dealership dealership) {
 		return cdService.findDealershipByVatNumber(dealership);
 	}
 
@@ -138,7 +138,7 @@ public class CarDealershipController {
 	 * Response
 	 */
 	@PostMapping("/createDealershipHeader")
-	public ResponseEntity<Dealership> saveDealershipTuMadr(@RequestBody Dealership dealership) {
+	public ResponseEntity<Dealership> saveDealershipTuMadr(@Valid @RequestBody Dealership dealership) {
 
 		ResponseEntity<Dealership> re = cdService.saveDealershipTuMadr(dealership);
 		return re;
