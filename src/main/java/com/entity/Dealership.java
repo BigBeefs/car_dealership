@@ -39,7 +39,7 @@ public class Dealership {
 	List<Car> cars = new ArrayList<>();
 
 	// Insert | Update
-	public Dealership(@Pattern(regexp = "^[A-Z]{2}\\d{9}$", message = "Formato non corretto!") String vatNumber,
+	public Dealership( String vatNumber,
 			String name, String country, String city) {
 		this.vatNumber = vatNumber;
 		this.name = name;

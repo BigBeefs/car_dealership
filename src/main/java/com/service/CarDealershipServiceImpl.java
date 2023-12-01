@@ -1,11 +1,15 @@
 package com.service;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.customException.DealershipAlreadyExistsException;
 import com.customException.DealershipTeapot;
@@ -15,6 +19,9 @@ import com.repository.CarRepository;
 import com.repository.DealershipRepository;
 
 @Service
+// Abbiamo bisogno di mettere il @Transactional poichè la gestione delle transazioni non viene fatta automaticamente da spring
+// Così facendo in caso di errore nell'inserimento nel db viene effettuato il rollback
+@Transactional
 public class CarDealershipServiceImpl implements CarDealershipService {
 
 	@Autowired
@@ -122,5 +129,22 @@ public class CarDealershipServiceImpl implements CarDealershipService {
 
 		return dealership;
 	}
+	
+	@Override
+    public ResponseEntity<Dealership> saveDealershipTuMadr(Dealership dealership) {
+        String vatNumber = dealership.getVatNumber();
+        Boolean exist = dealRep.existsById(vatNumber);
+
+        // caso update
+        if (exist) {
+            HttpHeaders headersResponse = new HttpHeaders();
+            headersResponse.add("puzzi", "di merda/json");
+            dealRep.save(dealership);
+            return ResponseEntity.ok().headers(headersResponse).body(dealership);
+        }
+        // caso insert
+        dealRep.save(dealership);
+        return ResponseEntity.ok().body(dealership);
+    }
 
 }

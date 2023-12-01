@@ -23,7 +23,10 @@ public class Car {
 
 	@Id
 	@Column(unique = true)
-	@Pattern(regexp = "^[A-Z]{2}\\\\d{2,3}[A-Z]{1,2}$", message = "Formato non corretto!")
+	// Accettiamo solamente questo tipo di formato tramite la regex
+	// Per farla funzionare abbiamo aggiunto la dependency: spring-boot-starter-validation
+	// Aggiungendo il @Vaild nel @Requestbody
+	@Pattern(regexp = "^[A-Z]{2}\\d{3}[A-Z]{2}$", message = "Formato non corretto!")
 	private String plate;
 
 	private String model;
@@ -35,8 +38,9 @@ public class Car {
 	@JsonIgnore
 	private Dealership dealership;
 
-	// Insert
-	public Car(@Pattern(regexp = "^[A-Z]{2}\\\\d{2,3}[A-Z]{1,2}$", message = "Formato non corretto!") String plate,
+	
+	// Insert @Pattern(regexp = "^[A-Z]{2}\\d{3}[A-Z]{2}$", message = "Formato non corretto!")
+	public Car(String plate,
 			String model, Double price) {
 		this.plate = plate;
 		this.model = model;
