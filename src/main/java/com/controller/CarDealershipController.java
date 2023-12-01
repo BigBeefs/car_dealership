@@ -1,6 +1,7 @@
 package com.controller;
 
 import java.net.URI;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class CarDealershipController {
 	/*
 	 * http://127.0.0.1:8080/api/findAllCarDealrships
 	 */
-	@GetMapping("/findAllCarDealrships")
+	@GetMapping(path = "/findAllCarDealrships")
 	public List<Dealership> findAllCarDealrships() {
 		return cdService.findAllCarDealrships();
 	}
@@ -91,15 +92,13 @@ public class CarDealershipController {
 	// metodo di test
 	@GetMapping("/example")
 	public String exampleEndpoint(@RequestHeader HttpHeaders headers) {
-		// Utilizza il valore dell'header come necessario
 
 		System.out.println(headers);
-//		return "Il valore dell'header è: " + headers;
 
 		String acceptHeader = headers.getFirst("Accept");
 		String acceptHeader1 = headers.getFirst("Host");
 
-		System.out.println(acceptHeader);
+		System.err.println(acceptHeader);
 		System.out.println(acceptHeader1);
 
 		HttpHeaders headersResponse = new HttpHeaders();
