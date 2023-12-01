@@ -8,7 +8,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,9 +23,8 @@ import lombok.Setter;
 public class Dealership {
 
 	@Id
-	@NotNull
 	@Pattern(regexp = "^[A-Z]{2}\\d{9}$", message = "Formato non corretto!")
-	@Column(name = "vat_number", unique = true, nullable = false)
+	@Column(name = "vat_number", unique = true)
 	private String vatNumber;
 
 	private String name;
@@ -39,8 +37,7 @@ public class Dealership {
 	List<Car> cars = new ArrayList<>();
 
 	// Insert | Update
-	public Dealership( String vatNumber,
-			String name, String country, String city) {
+	public Dealership(String vatNumber, String name, String country, String city) {
 		this.vatNumber = vatNumber;
 		this.name = name;
 		this.country = country;

@@ -31,9 +31,38 @@ import jakarta.validation.ConstraintViolationException;
 @ControllerAdvice
 public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
 
+	// Gestiamo l'eccezione nel caso in cui la Dealership da aggiorna non esista nel DB
+	@ExceptionHandler(DealershipTeapot.class)
+	public ResponseEntity<Object> handleRecordNotFound(DealershipTeapot ex) {
+
+		Map<String, String> errors = new HashMap<>();
+		ApiError apiError = new ApiError(HttpStatus.I_AM_A_TEAPOT, ex, ex.getMessage(), errors);
+
+		return new ResponseEntity<>(apiError, apiError.getHttpStatus());
+
+	}
+
+	// Gestiamo l'eccezione nel caso in cui la Dealership da inserire esista gia' nel DB
+	@ExceptionHandler(DealershipAlreadyExistsException.class)
+	public ResponseEntity<Object> HandleDealershipAlreadyExists(DealershipAlreadyExistsException ex) {
+
+		Map<String, String> errors = new HashMap<>();
+		ApiError apiError = new ApiError(HttpStatus.CONFLICT, ex, ex.getMessage(), errors);
+
+		return new ResponseEntity<>(apiError, apiError.getHttpStatus());
+
+	}
+
+	// Gestiamo l'eccezione nel caso in cui la regex non corrisponde
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	protected ResponseEntity<Object> handleDataIntegrityViolation(ConstraintViolationException ex, WebRequest request) {
+		String errorMessage = "Errore di violazione del vincolo: " + ex.getMessage();
+		return handleExceptionInternal(ex, errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+
 	/*
-	 * Metodo che cattura l'eccezione MethodArgumentNotValidException e customizza
-	 * la response
+	 * Metodo che cattura l'eccezione MethodArgumentNotValidException e customizza la response
 	 */
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -42,14 +71,16 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
 		Map<String, Object> body = new HashMap<>();
 		body.put("timestamp", LocalDate.now());
 		body.put("status", status.value()); // Codice di eccezione che si verifica (Bad request = 400) che metto ANCHE
-											// nel body
+		// nel body
 		body.put("message", ex.getMessage()); // il messaggio dell'eccezione
 		return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
 	}
 
-	/*
-	 * OPPURE, USANDO LA CLASSE DI TEMPLATE ApiError:
-	 */
+}
+
+/*
+ * OPPURE, USANDO LA CLASSE DI TEMPLATE ApiError:
+ */
 
 //	@Override
 //	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -68,9 +99,9 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
 //		return new ResponseEntity<>(apiError, apiError.getHttpStatus());
 //	}
 
-	/*
-	 * Gestione custom di altre eccezioni
-	 */
+/*
+ * Gestione custom di altre eccezioni
+ */
 //	@Override
 //	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
 //			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -110,36 +141,3 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
 //		return new ResponseEntity<>(apiError, apiError.getHttpStatus());
 //
 //	}
-
-	@ExceptionHandler(DealershipAlreadyExistsException.class)
-	public ResponseEntity<Object> HandleDealershipAlreadyExists(DealershipAlreadyExistsException ex) {
-
-		Map<String, String> errors = new HashMap<>();
-		ApiError apiError = new ApiError(HttpStatus.CONFLICT, ex, ex.getMessage(), errors);
-
-		return new ResponseEntity<>(apiError, apiError.getHttpStatus());
-
-	}
-
-	@ExceptionHandler(DealershipTeapot.class)
-	public ResponseEntity<Object> handleRecordNotFound(DealershipTeapot ex) {
-
-		Map<String, String> errors = new HashMap<>();
-		ApiError apiError = new ApiError(HttpStatus.I_AM_A_TEAPOT, ex, ex.getMessage(), errors);
-
-		return new ResponseEntity<>(apiError, apiError.getHttpStatus());
-
-	}
-	
-	
-		// Gestiamo l'eccezione nel caso in cui la regex non corrisponde
-	
-	  @ExceptionHandler(ConstraintViolationException.class)
-	  protected ResponseEntity<Object> handleDataIntegrityViolation(ConstraintViolationException ex, WebRequest request) {
-	        String errorMessage = "Errore di violazione del vincolo: " + ex.getMessage();
-	        return handleExceptionInternal(ex, errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-	    }
-	  
-	  
-
-}

@@ -1,7 +1,5 @@
 package com.controller;
 
-import java.net.URI;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.entity.Car;
 import com.entity.Dealership;
@@ -35,9 +32,9 @@ public class CarDealershipController {
 	CarDealershipService cdService;
 
 	/*
-	 * Input da dare nel body: {"vatNumber": "AA123456789", "name": "SigAuto2",
-	 * "country" : "Tasmania", "city" : "Taz", "cars": [ { "plate": "GG333CC",
-	 * "model": "M3", "price" : 2 }]}
+	 * Input da dare nel body: {"vatNumber": "AA123456789", "name": "SigAuto2", "country" :
+	 * "Tasmania", "city" : "Taz", "cars": [ { "plate": "GG333CC", "model": "M3", "price" : 2
+	 * }]}
 	 * 
 	 * http://127.0.0.1:8080/api/createCarsDealership
 	 */
@@ -48,8 +45,7 @@ public class CarDealershipController {
 	}
 
 	/*
-	 * Input da dare nel body: [ { "plate": "GG333HH", "model": "M5", "price" : 23
-	 * }]
+	 * Input da dare nel body: [ { "plate": "GG333HH", "model": "M5", "price" : 23 }]
 	 * 
 	 * http://127.0.0.1:8080/api/updateCarsOfDealership/{vatNumber}
 	 */
@@ -87,19 +83,17 @@ public class CarDealershipController {
 		return cdService.findDealershipByVatNumber(dealership);
 	}
 
-	// http://127.0.0.1:8080/api/example
-
-	// metodo di test
+	/*
+	 * http://127.0.0.1:8080/api/example
+	 * 
+	 * metodo di test sugli hearders
+	 */
 	@GetMapping("/example")
 	public String exampleEndpoint(@RequestHeader HttpHeaders headers) {
 
 		System.out.println(headers);
 
 		String acceptHeader = headers.getFirst("Accept");
-		String acceptHeader1 = headers.getFirst("Host");
-
-		System.err.println(acceptHeader);
-		System.out.println(acceptHeader1);
 
 		HttpHeaders headersResponse = new HttpHeaders();
 		headersResponse.add("Tua madre", "Cuoca");
@@ -113,22 +107,10 @@ public class CarDealershipController {
 	}
 
 	/*
-	 * http://127.0.0.1:8080/api/findAllCarDealrshipsCustom
+	 * http://127.0.0.1:8080/api/findAllCarDealrshipsCustom1
+	 * 
+	 * Metodo di find all con controlli sugli headers
 	 */
-	@GetMapping("/findAllCarDealrshipsCustom")
-	public List<Dealership> findAllCarDealrshipsCustom(@RequestHeader HttpHeaders headers) {
-		String acceptHeader = headers.getFirst("Accept");
-
-		System.out.println(exampleEndpoint(headers));
-		HttpHeaders headersResponse = new HttpHeaders();
-		headersResponse.add("Content-Type", "application/json");
-
-		ResponseEntity.ok().headers(headersResponse);
-
-		return cdService.findAllCarDealrships();
-
-	}
-
 	@GetMapping(path = "/findAllCarDealrshipsCustom1") // produces = MediaType.APPLICATION_JSON_VALUE
 	public ResponseEntity<List<Dealership>> findAllCarDealrshipsCustom1(@RequestHeader HttpHeaders headers) {
 
@@ -139,9 +121,6 @@ public class CarDealershipController {
 		Boolean checkJSON = acceptHeader.contains("application/json");
 		Boolean checkXML = acceptHeader.contains("application/xml");
 
-		System.out.println(checkXML);
-		System.out.println(acceptHeader);
-
 		if (checkXML) {
 
 			return ResponseEntity.ok().contentType(MediaType.APPLICATION_XML).body(dealerships);
@@ -151,28 +130,18 @@ public class CarDealershipController {
 		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(dealerships);
 
 	}
-	
-    @PostMapping("/createDealershipHeader")
-    public ResponseEntity<Dealership> saveDealershipTuMadr(@RequestBody Dealership dealership) {
 
-        ResponseEntity<Dealership> re = cdService.saveDealershipTuMadr(dealership);
+	/*
+	 * http://127.0.0.1:8080/api/createDealershipHeader
+	 * 
+	 * In base all'operazione da fare inserisco un messaggio specifico nell'hearder della
+	 * Response
+	 */
+	@PostMapping("/createDealershipHeader")
+	public ResponseEntity<Dealership> saveDealershipTuMadr(@RequestBody Dealership dealership) {
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{vatNumber}")
-                .buildAndExpand(re.getBody().getVatNumber()).toUri();
-
-        return re;
-
-    }
-
-//	@PostMapping(value = "/yourEndpoint", consumes = { MediaType.APPLICATION_XML_VALUE,
-//			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
-//					MediaType.APPLICATION_JSON_VALUE })
-//	public ResponseEntity<List<Dealership>> yourEndpoint() {
-//		// Logica del controller
-//
-//		// Ritorna qualcosa che verrà serializzato in XML o JSON in base all'header
-//		// Accept
-//		return ResponseEntity.ok().body(cdService.findAllCarDealrships());
-//	}
+		ResponseEntity<Dealership> re = cdService.saveDealershipTuMadr(dealership);
+		return re;
+	}
 
 }

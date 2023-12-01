@@ -38,10 +38,8 @@ public class Car {
 	@JsonIgnore
 	private Dealership dealership;
 
-	
 	// Insert @Pattern(regexp = "^[A-Z]{2}\\d{3}[A-Z]{2}$", message = "Formato non corretto!")
-	public Car(String plate,
-			String model, Double price) {
+	public Car(String plate, String model, Double price) {
 		this.plate = plate;
 		this.model = model;
 		this.price = price;

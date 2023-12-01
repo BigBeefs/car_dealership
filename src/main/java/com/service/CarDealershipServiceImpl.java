@@ -1,6 +1,5 @@
 package com.service;
 
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,22 +128,27 @@ public class CarDealershipServiceImpl implements CarDealershipService {
 
 		return dealership;
 	}
-	
-	@Override
-    public ResponseEntity<Dealership> saveDealershipTuMadr(Dealership dealership) {
-        String vatNumber = dealership.getVatNumber();
-        Boolean exist = dealRep.existsById(vatNumber);
 
-        // caso update
-        if (exist) {
-            HttpHeaders headersResponse = new HttpHeaders();
-            headersResponse.add("puzzi", "di merda/json");
-            dealRep.save(dealership);
-            return ResponseEntity.ok().headers(headersResponse).body(dealership);
-        }
-        // caso insert
-        dealRep.save(dealership);
-        return ResponseEntity.ok().body(dealership);
-    }
+	/*
+	 * In base all'operazione fatta sul DB (INSERT / UPDATE) restituiamo un messaggio diverso
+	 * sull'header
+	 */
+	@Override
+	public ResponseEntity<Dealership> saveDealershipTuMadr(Dealership dealership) {
+		String vatNumber = dealership.getVatNumber();
+		Boolean exist = dealRep.existsById(vatNumber);
+		HttpHeaders headersResponse = new HttpHeaders();
+
+		// caso update
+		if (exist) {
+			headersResponse.add("Operation Type", "UPDATE");
+			dealRep.save(dealership);
+			return ResponseEntity.ok().headers(headersResponse).body(dealership);
+		}
+		// caso insert
+		headersResponse.add("Operation Type", "INSERT");
+		dealRep.save(dealership);
+		return ResponseEntity.ok().headers(headersResponse).body(dealership);
+	}
 
 }
